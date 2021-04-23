@@ -11,6 +11,9 @@ size = width, height = 600, 400
 black = (0, 0, 0)
 white = (255, 255, 255)
 
+scoreBoard = []
+notAppended = True
+
 screen = pygame.display.set_mode(size)
 
 mediumFont = pygame.font.Font("OpenSans-Regular.ttf", 28)
@@ -31,7 +34,7 @@ while True:
             sys.exit()
 
     screen.fill(black)
-
+    
     # Let user select what to play against
     if is_mult is None:
 
@@ -97,6 +100,10 @@ while True:
                 # Show gameOver title
                 if game_over:
                     winner = ttt.winner(board)
+                    if notAppended:
+                        scoreBoard.append(winner)
+                        notAppended = False
+                        which_user = False
                     if winner is None:
                         title = "Game Over: Tie."
                     else:
@@ -121,6 +128,30 @@ while True:
                                 which_user = not which_user
 
                 if game_over:
+                    
+                    #scoreboard
+                    tie=x=o=0
+                    for i in range( len(scoreBoard) ):
+                        if scoreBoard[i] == None:
+                            tie += 1
+                        elif scoreBoard[i] == "X":
+                            x += 1
+                        else:
+                            o += 1
+                    xscore = mediumFont.render(f"X   : {x}", True, white)
+                    oscore = mediumFont.render(f"O   : {o}", True, white)
+                    tiescore = mediumFont.render(f"TIE : {tie}", True, white)
+                    xscoreRect = xscore.get_rect()
+                    oscoreRect = oscore.get_rect()
+                    tiescoreRect = tiescore.get_rect()
+                    xscoreRect.center = (width / 2 - 2.5*tile_size - 4, height/2 - 1.5*tile_size + 90)
+                    oscoreRect.center = (width / 2 - 2.5*tile_size - 6, height/2 - 1.5*tile_size + 120)
+                    tiescoreRect.center = (width / 2 - 2.5*tile_size - 6, height/2 - 1.5*tile_size + 150)
+                    screen.blit(xscore, xscoreRect)
+                    screen.blit(oscore, oscoreRect)
+                    screen.blit(tiescore, tiescoreRect)
+                    
+                    #play again button
                     againButton = pygame.Rect(width / 3, height - 65, width / 3, 50)
                     again = mediumFont.render("Play Again", True, black)
                     againRect = again.get_rect()
@@ -133,6 +164,9 @@ while True:
                         if againButton.collidepoint(mouse):
                             time.sleep(0.2)
                             board = ttt.initial_state()
+                            
+                else:
+                    notAppended = True
 
         else:
 

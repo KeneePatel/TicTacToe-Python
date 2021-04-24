@@ -109,9 +109,9 @@ while True:
                     else:
                         title = "Game Over: " + winner + " wins."
                 elif which_user:
-                    title = "Player 1's turn"
-                else:
                     title = "Player 2's turn"
+                else:
+                    title = "Player 1's turn"
                 title = largeFont.render(title, True, white)
                 titleRect = title.get_rect()
                 titleRect.center = ((width / 2), 30)
